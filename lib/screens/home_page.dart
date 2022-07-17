@@ -111,6 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 12),
                 backgroundColor: Colors.red, // Text Color
               ),
+
               child: Text(
                 "Log Out",
                 style: GoogleFonts.roboto().copyWith(
