@@ -15,8 +15,15 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController pass1Controller = TextEditingController();
+  final TextEditingController pass2Controller = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
   String pas1 = "", pas2 = "", name = "", email = "";
   String password = "", email2 = "";
+
+  bool isPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,45 +48,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 30),
             MyTextField(
-              onChanged: (value) async {
-                await StorageRepository.putString(key: "email", value: value);
-                email = value;
-                setState((){
-                  email2 = value;
-                });
-              },
+              controller: emailController,
               labelText: "Enter your email address",
               icon: Icons.email,
               keyType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 20),
             MyTextField(
-              onChanged: (value) {
-                name = value;
-              },
+              controller: nameController,
               labelText: "Enter your full name",
               icon: Icons.account_circle,
               keyType: TextInputType.name,
             ),
             const SizedBox(height: 20),
             MyTextField(
-              onChanged: (value) async {
-                await StorageRepository.putString(
-                    key: "password", value: value);
-                pas1 = value;
-                setState((){
-                  password = value;
-                });
-              },
+              controller: pass1Controller,
               labelText: "Enter your password",
               icon: Icons.lock,
               keyType: TextInputType.visiblePassword,
             ),
             const SizedBox(height: 20),
             MyTextField(
-                onChanged: (value) {
-                  pas2 = value;
-                },
+                controller: pass2Controller,
+                // onChanged: (value) {
+                //   pas2 = value;
+                // },
                 labelText: "Enter confirmation password",
                 icon: Icons.lock_person,
                 keyType: TextInputType.visiblePassword),
@@ -103,18 +96,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 13),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
+                email = emailController.text;
+                name = nameController.text;
+                pas1 = pass1Controller.text;
+                pas2 = pass2Controller.text;
+
                 if (email != "" && name != "" && pas1 != "" && pas2 != "") {
-                  if (pas1 == pas2) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return LoginScreen(password: password, email: email2,);
-                    }));
-                    UtilityFunctions.getMyToast(
-                        message: "You are successfully registered");
+                  if (pas1.length >= 8) {
+                    if (pas1 == pas2) {
+                      await StorageRepository.putString(
+                          key: "password", value: pas1);
+                      await StorageRepository.putString(
+                          key: "email", value: email);
+                      await StorageRepository.putString(
+                          key: "name", value: name);
+
+                      UtilityFunctions.getMyToast(
+                          message: "You are successfully registered");
+
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return LoginScreen();
+                      }));
+
+                    } else {
+                      UtilityFunctions.getMyToast(
+                          message: "Your confirmation password is not matched");
+                    }
                   } else {
                     UtilityFunctions.getMyToast(
-                        message: "Your confirmation password is not matched");
+                        message:
+                            "Your password should contain at least 8 symbols");
                   }
                 } else {
                   UtilityFunctions.getMyToast(
@@ -150,8 +163,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(width: 10),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) {
-                      return LoginScreen(password: password, email: email2,);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return LoginScreen();
                     }));
                   },
                   child: Text(

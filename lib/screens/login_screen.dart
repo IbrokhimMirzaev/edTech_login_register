@@ -10,17 +10,17 @@ import 'package:shared_preference/utils/utility_functions.dart';
 import '../global_widgets/my_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key, required this.password, required this.email}) : super(key: key);
-
-  final String password, email;
+  const LoginScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String inputEmail = "";
-  String inputPassword = "";
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,24 +43,23 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Center(
-                child: Lottie.asset("assets/lottie/login.json",
-                    width: 220, height: 220, fit: BoxFit.fill)),
+              child: Lottie.asset(
+                "assets/lottie/login.json",
+                width: 220,
+                height: 220,
+                fit: BoxFit.fill,
+              ),
+            ),
             const Expanded(child: SizedBox()),
             MyTextField(
-              onChanged: (value) {
-                print("email = ${widget.email}");
-                inputEmail = value;
-              },
+              controller: emailController,
               labelText: "Enter your email address",
               icon: Icons.email,
               keyType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 20),
             MyTextField(
-              onChanged: (value) {
-                print("parol = ${widget.password}");
-                inputPassword = value;
-              },
+              controller: passwordController,
               labelText: "Enter your password",
               icon: Icons.remove_red_eye_rounded,
               keyType: TextInputType.visiblePassword,
@@ -89,8 +88,17 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 13),
             GestureDetector(
               onTap: () async {
-                if (inputPassword == widget.password && inputEmail == widget.email) {
-                  Navigator.push(context,
+                String password = passwordController.text;
+                String email = emailController.text;
+
+                String savedEmail = StorageRepository.getString("email");
+                String savedPassword = StorageRepository.getString("password");
+
+                print("EMAIL:$savedEmail");
+                print("PASSWORD:$savedPassword");
+
+                if (password == savedPassword && email == savedEmail) {
+                  Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (BuildContext context) {
                     return const MyHomePage();
                   }));
@@ -148,5 +156,13 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    emailController.dispose();
+    // ustoz dispose faqat hotiradan ochirish uchun kerakaHaa
+    super.dispose();
   }
 }

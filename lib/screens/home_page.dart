@@ -13,22 +13,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    init();
-    super.initState();
-  }
-
-  String email = "";
-  String password = "";
-
-  Future<void> init() async {
-    await StorageRepository.getInstance();
-    setState((){
-      email = StorageRepository.getString("email");
-      password = StorageRepository.getString("password");
-    });
-  }
+  String email = StorageRepository.getString("email");
+  String password = StorageRepository.getString("password");
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 }));
                 StorageRepository.deleteString("email");
                 StorageRepository.deleteString("password");
+                StorageRepository.deleteBool("isLogged");
               },
               style: TextButton.styleFrom(
                 padding:

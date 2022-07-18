@@ -1,36 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyTextField extends StatefulWidget {
+class MyTextField extends StatelessWidget {
   const MyTextField({
     Key? key,
     required this.labelText,
     required this.icon,
     required this.keyType,
-    required this.onChanged,
+    required this.controller,
   }) : super(key: key);
   final String labelText;
   final IconData icon;
   final TextInputType keyType;
-  final ValueChanged onChanged;
+  final TextEditingController controller;
 
-  @override
-  State<MyTextField> createState() => _MyTextFieldState();
-}
-
-class _MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
       style: GoogleFonts.roboto().copyWith(fontWeight: FontWeight.w600),
-      obscureText: widget.keyType == TextInputType.visiblePassword ? true : false,
-      keyboardType: widget.keyType,
+      obscureText: keyType == TextInputType.visiblePassword ? true : false,
+      keyboardType: keyType,
       cursorColor: Colors.orange,
-      onChanged: widget.onChanged,
+      controller: controller,
+      // onChanged kerakmasmi
+      //yuq
+
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
-        suffixIcon: Icon(widget.icon, color: Colors.black),
-        labelText: widget.labelText,
+        suffixIcon: Icon(icon, color: Colors.black),
+        labelText: labelText,
         labelStyle: const TextStyle(
           color: Colors.black45,
           fontWeight: FontWeight.w400,
