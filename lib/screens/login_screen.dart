@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -8,6 +9,8 @@ import 'package:shared_preference/screens/register_screen.dart';
 import 'package:shared_preference/utils/utility_functions.dart';
 
 import '../global_widgets/my_text_field.dart';
+import '../utils/colors.dart';
+import '../utils/icons.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -22,69 +25,104 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  bool isObscure = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          backgroundColor: Colors.orange, title: const Text("Login Screen")),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark,
+          statusBarColor: Colors.white,
+          statusBarBrightness: Brightness.light,
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text("Login Screen",
+            style: GoogleFonts.rubik().copyWith(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: MyColors.inkDark)),
+        centerTitle: true,
+      ),
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 50),
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Lottie.asset(
+              "assets/lottie/login.json",
+              width: 220,
+              height: 220,
+              fit: BoxFit.fill,
+            ),
             Text(
-              "Login",
-              style: GoogleFonts.roboto().copyWith(
-                fontSize: 36,
-                fontWeight: FontWeight.w700,
-                color: Colors.orange,
-              ),
+              "Log in",
+              style: GoogleFonts.rubik().copyWith(
+                  color: MyColors.inkDark,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24),
             ),
-            Center(
-              child: Lottie.asset(
-                "assets/lottie/login.json",
-                width: 220,
-                height: 220,
-                fit: BoxFit.fill,
-              ),
+            const SizedBox(height: 10),
+            Text(
+              "Login with social networks",
+              style: GoogleFonts.rubik()
+                  .copyWith(color: MyColors.inkDarkGrey, fontSize: 14),
             ),
-            const Expanded(child: SizedBox()),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(MyIcons.facebook, width: 40, height: 40),
+                const SizedBox(width: 12),
+                SvgPicture.asset(MyIcons.insta, width: 40, height: 40),
+                const SizedBox(width: 12),
+                SvgPicture.asset(MyIcons.google, width: 40, height: 40),
+              ],
+            ),
+            const SizedBox(height: 16),
             MyTextField(
               controller: emailController,
-              labelText: "Enter your email address",
-              icon: Icons.email,
+              labelText: "Email",
+              icon: const Icon(Icons.email),
               keyType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 20),
             MyTextField(
               controller: passwordController,
-              labelText: "Enter your password",
-              icon: Icons.remove_red_eye_rounded,
-              keyType: TextInputType.visiblePassword,
+              labelText: "Password",
+              icon: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isObscure = !isObscure;
+                  });
+                },
+                child: isObscure
+                    ? SvgPicture.asset(
+                        MyIcons.invisible,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.scaleDown,
+                      )
+                    : SvgPicture.asset(
+                        MyIcons.visible,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.scaleDown,
+                      ),
+              ),
+              isObscure: isObscure,
+              keyType: TextInputType.text,
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  "Forgot Password?",
-                  style: GoogleFonts.roboto().copyWith(
-                      fontWeight: FontWeight.w700, color: Colors.orange),
-                ),
-              ],
+            Text(
+              "Forgot Password?",
+              style: GoogleFonts.rubik().copyWith(
+                  fontWeight: FontWeight.w700, color: MyColors.inkDarkGrey),
             ),
             const SizedBox(height: 5),
-            Row(
-              children: [
-                SvgPicture.asset("assets/svg/google.svg",
-                    width: 60, height: 60),
-                SvgPicture.asset("assets/svg/facebook.svg",
-                    width: 60, height: 60),
-                SvgPicture.asset("assets/svg/apple.svg", width: 60, height: 60),
-              ],
-            ),
             const SizedBox(height: 13),
             GestureDetector(
               onTap: () async {
@@ -110,13 +148,13 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Container(
                 width: double.infinity,
-                height: 50,
+                height: 56,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.orange),
+                    color: MyColors.primaryColor),
                 child: Center(
                   child: Text(
-                    "LOGIN",
+                    "Log in",
                     style: GoogleFonts.roboto().copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -162,7 +200,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     passwordController.dispose();
     emailController.dispose();
-    // ustoz dispose faqat hotiradan ochirish uchun kerakaHaa
     super.dispose();
   }
 }

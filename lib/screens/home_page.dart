@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
+import 'package:shared_preference/screens/profile_screen.dart';
 import 'package:shared_preference/screens/register_screen.dart';
+import 'package:shared_preference/screens/settings_screen.dart';
 
 import '../local_data/storage.dart';
+import '../utils/colors.dart';
+import '../utils/icons.dart';
+import 'courses_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -13,102 +19,87 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String email = StorageRepository.getString("email");
-  String password = StorageRepository.getString("password");
+  int currentIndex = 0;
+
+  List<Widget> screens = [
+    const CoursesScreen(),
+    const ProfileScreen(),
+    const SettingsScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text('Home Page'),
-      ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 50),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Lottie.asset("assets/lottie/user.json",
-                repeat: false, height: 150, width: 150),
-            const SizedBox(height: 40),
-            SizedBox(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          email,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Image.asset(
-                        "assets/images/gmail.png",
-                        fit: BoxFit.cover,
-                        width: 20,
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "password: $password",
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Image.asset(
-                        "assets/images/lock.png",
-                        width: 20,
-                        height: 20,
-                        fit: BoxFit.cover,
-                      ),
-                    ],
-                  ),
-                ],
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(topRight: Radius.circular(22), topLeft: Radius.circular(22)),
+        child: SizedBox(
+          height: 95,
+          child: BottomNavigationBar(
+            onTap: (index) {
+              setState(() {
+                currentIndex = index;
+              });
+            },
+            selectedItemColor: MyColors.primaryColor,
+            unselectedItemColor: MyColors.inkGrey,
+            selectedIconTheme: const IconThemeData(color: MyColors.primaryColor),
+            unselectedIconTheme: const IconThemeData(color: MyColors.inkGrey),
+            unselectedFontSize: 14,
+            backgroundColor: Theme.of(context).backgroundColor,
+            currentIndex: currentIndex,
+            items: [
+              BottomNavigationBarItem(
+                label: "Courses",
+                activeIcon: SvgPicture.asset(
+                  MyIcons.book,
+                  width: 45,
+                  height: 45,
+                  color: MyColors.primaryColor,
+                ),
+                icon: SvgPicture.asset(
+                  MyIcons.book,
+                  width: 45,
+                  height: 45,
+                  color: MyColors.inkGrey,
+                ),
               ),
-            ),
-            const SizedBox(height: 80),
-            TextButton(
-              onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (BuildContext context) {
-                  return const RegisterScreen();
-                }));
-                StorageRepository.deleteString("email");
-                StorageRepository.deleteString("password");
-                StorageRepository.deleteBool("isLogged");
-              },
-              style: TextButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 12),
-                backgroundColor: Colors.red, // Text Color
+              BottomNavigationBarItem(
+                label: "Profile",
+                activeIcon: SvgPicture.asset(
+                  MyIcons.profile,
+                  width: 45,
+                  height: 45,
+                  color: MyColors.primaryColor,
+                ),
+                icon: SvgPicture.asset(
+                  MyIcons.profile,
+                  width: 45,
+                  height: 45,
+                  color: MyColors.inkGrey,
+                ),
               ),
-
-              child: Text(
-                "Log Out",
-                style: GoogleFonts.roboto().copyWith(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+              BottomNavigationBarItem(
+                label: "Settings",
+                activeIcon: SvgPicture.asset(
+                  MyIcons.settings,
+                  width: 45,
+                  height: 45,
+                  color: MyColors.primaryColor,
+                ),
+                icon: SvgPicture.asset(
+                  MyIcons.settings,
+                  width: 45,
+                  height: 45,
+                  color: MyColors.inkGrey,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+      body: IndexedStack(
+        index: currentIndex,
+        children: screens,
       ),
     );
   }

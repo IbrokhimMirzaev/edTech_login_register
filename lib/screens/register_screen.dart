@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preference/global_widgets/my_text_field.dart';
@@ -6,6 +7,8 @@ import 'package:shared_preference/screens/login_screen.dart';
 import 'package:shared_preference/utils/utility_functions.dart';
 
 import '../local_data/storage.dart';
+import '../utils/colors.dart';
+import '../utils/icons.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -31,70 +34,68 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          backgroundColor: Colors.orange,
-          title: const Text("Registration Screen")),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark,
+          statusBarColor: Colors.white,
+          statusBarBrightness: Brightness.light,
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text("Register Screen",
+            style: GoogleFonts.rubik().copyWith(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: MyColors.inkDark)),
+        centerTitle: true,
+      ),
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 50),
+        padding: const EdgeInsets.only(left: 25, right: 25, top: 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Expanded(child: Image.asset(MyIcons.registerGirl)),
+            const SizedBox(height: 16),
             Text(
               "Register",
-              style: GoogleFonts.roboto().copyWith(
-                fontSize: 36,
-                fontWeight: FontWeight.w700,
-                color: Colors.orange,
-              ),
+              style: GoogleFonts.rubik().copyWith(
+                  color: MyColors.inkDark,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
+            Text(
+              "Create your account",
+              style: GoogleFonts.rubik()
+                  .copyWith(color: MyColors.inkDarkGrey, fontSize: 14),
+            ),
+            const SizedBox(height: 16),
             MyTextField(
               controller: emailController,
-              labelText: "Enter your email address",
-              icon: Icons.email,
+              labelText: "Email",
+              icon: const Icon(Icons.email),
               keyType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 20),
             MyTextField(
               controller: nameController,
-              labelText: "Enter your full name",
-              icon: Icons.account_circle,
+              labelText: "Name",
+              icon: const Icon(Icons.account_circle),
               keyType: TextInputType.name,
             ),
             const SizedBox(height: 20),
             MyTextField(
               controller: pass1Controller,
-              labelText: "Enter your password",
-              icon: Icons.lock,
+              labelText: "Password",
+              icon: const Icon(Icons.lock),
               keyType: TextInputType.visiblePassword,
             ),
             const SizedBox(height: 20),
             MyTextField(
                 controller: pass2Controller,
-                // onChanged: (value) {
-                //   pas2 = value;
-                // },
-                labelText: "Enter confirmation password",
-                icon: Icons.lock_person,
+                labelText: "Confirmation password",
+                icon: const Icon(Icons.lock_person),
                 keyType: TextInputType.visiblePassword),
-            const SizedBox(height: 40),
-            Text(
-              "Continue with",
-              style: GoogleFonts.roboto().copyWith(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey),
-            ),
-            const SizedBox(height: 13),
-            Row(
-              children: [
-                SvgPicture.asset("assets/svg/google.svg",
-                    width: 60, height: 60),
-                SvgPicture.asset("assets/svg/facebook.svg",
-                    width: 60, height: 60),
-                SvgPicture.asset("assets/svg/apple.svg", width: 60, height: 60),
-              ],
-            ),
-            const SizedBox(height: 13),
+            const SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
                 email = emailController.text;
@@ -119,7 +120,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           MaterialPageRoute(builder: (BuildContext context) {
                         return LoginScreen();
                       }));
-
                     } else {
                       UtilityFunctions.getMyToast(
                           message: "Your confirmation password is not matched");
@@ -136,40 +136,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
               child: Container(
                 width: double.infinity,
-                height: 50,
+                height: 56,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Colors.orange),
+                    color: MyColors.primaryColor),
                 child: Center(
                   child: Text(
-                    "REGISTER",
+                    "Register",
                     style: GoogleFonts.roboto().copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 18),
+                        fontSize: 15),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 15),
+            // const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Already have an account?",
                   style: GoogleFonts.roboto().copyWith(
-                      color: Colors.orangeAccent, fontWeight: FontWeight.bold),
+                      color: MyColors.primaryColor, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 10),
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return LoginScreen();
+                      return const LoginScreen();
                     }));
                   },
                   child: Text(
-                    "Login",
+                    "Log in",
                     style: GoogleFonts.roboto().copyWith(
                         color: Colors.black,
                         fontSize: 18,

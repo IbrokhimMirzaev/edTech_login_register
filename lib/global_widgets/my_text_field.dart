@@ -8,26 +8,25 @@ class MyTextField extends StatelessWidget {
     required this.icon,
     required this.keyType,
     required this.controller,
+    this.isObscure,
   }) : super(key: key);
   final String labelText;
-  final IconData icon;
+  final Widget icon;
+  final bool? isObscure;
   final TextInputType keyType;
   final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      style: GoogleFonts.roboto().copyWith(fontWeight: FontWeight.w600),
-      obscureText: keyType == TextInputType.visiblePassword ? true : false,
+      style: GoogleFonts.roboto().copyWith(fontWeight: FontWeight.w600, fontSize: 13),
+      obscureText: isObscure ?? false,
       keyboardType: keyType,
       cursorColor: Colors.orange,
       controller: controller,
-      // onChanged kerakmasmi
-      //yuq
-
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
-        suffixIcon: Icon(icon, color: Colors.black),
+        suffixIcon: icon,
         labelText: labelText,
         labelStyle: const TextStyle(
           color: Colors.black45,
