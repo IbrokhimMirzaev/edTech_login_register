@@ -12,6 +12,10 @@ class MyIcons {
   static const registerGirl = "assets/images/girl_registr.png";
   static const onWheels = "assets/images/on_wheels.png";
   static const splash = "assets/images/splash.png";
+  static const intro1 = "assets/images/img.png";
+  static const intro2 = "assets/images/img_1.png";
+  static const intro3 = "assets/images/img_2.png";
+  static const video = "assets/images/video.png";
 
   // .svg
   static const back = "assets/svg/back.svg";
@@ -30,6 +34,7 @@ class MyIcons {
   static const email = "assets/svg/email.svg";
   static const password = "assets/svg/password.svg";
   static const next = "assets/svg/next.svg";
+  static const play = "assets/svg/play.svg";
 
   // .lottie
   static const loadingJson = "assets/lottie/loading.json";

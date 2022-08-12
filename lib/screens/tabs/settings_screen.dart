@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preference/global_widgets/account_info_bar.dart';
+import 'package:shared_preference/widgets/account_info_bar.dart';
 import 'package:shared_preference/local_data/storage.dart';
+import 'package:shared_preference/widgets/arrow_back.dart';
 
-import '../utils/colors.dart';
-import '../utils/icons.dart';
+import '../../utils/colors.dart';
+import '../../utils/icons.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -47,20 +48,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.headline1!.color)),
         centerTitle: true,
-        leading: GestureDetector(
+        leading: ArrowBack(
           onTap: () {
             SystemNavigator.pop();
           },
-          child: Container(
-            width: 40,
-            height: 40,
-            margin: const EdgeInsets.only(left: 15),
-            child: SvgPicture.asset(
-              MyIcons.back,
-              color: Theme.of(context).iconTheme.color,
-              fit: BoxFit.scaleDown,
-            ),
-          ),
         ),
       ),
       body: SingleChildScrollView(

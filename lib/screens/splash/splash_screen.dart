@@ -3,10 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preference/local_data/storage.dart';
-import 'package:shared_preference/screens/home_page.dart';
-import 'package:shared_preference/screens/login_screen.dart';
-
-import '../utils/colors.dart';
+import 'package:shared_preference/screens/tabs/tab_box.dart';
+import '../on_boarding/intro_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -21,10 +19,10 @@ class _SplashScreenState extends State<SplashScreen> {
     _init();
     Future.delayed(const Duration(seconds: 3), () {
       bool isLogged = StorageRepository.getBool("isLogged");
-      print("IS LOGGED:$isLogged");
+      debugPrint("IS LOGGED:$isLogged");
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) {
-        return isLogged ? const MyHomePage() : const LoginScreen();
+        return isLogged ? const MyHomePage() : const IntroScreen();
       }));
     });
     super.initState();
@@ -43,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
     ));
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height * 0.87,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

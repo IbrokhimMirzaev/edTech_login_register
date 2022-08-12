@@ -4,13 +4,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preference/local_data/storage.dart';
-import 'package:shared_preference/screens/home_page.dart';
-import 'package:shared_preference/screens/register_screen.dart';
+import 'package:shared_preference/screens/tabs/tab_box.dart';
+import 'package:shared_preference/screens/login/register_screen.dart';
+import 'package:shared_preference/utils/colors.dart';
+import 'package:shared_preference/utils/focusChange.dart';
+import 'package:shared_preference/utils/icons.dart';
 import 'package:shared_preference/utils/utility_functions.dart';
-
-import '../global_widgets/my_text_field.dart';
-import '../utils/colors.dart';
-import '../utils/icons.dart';
+import 'package:shared_preference/widgets/my_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -24,6 +24,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   bool isObscure = false;
 
@@ -84,13 +94,29 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 16),
             MyTextField(
+              onSubmitted: (value) {
+                if (value != "") {
+                  MyUtils.fieldFocusChange(
+                      context, emailFocusNode, passwordFocusNode);
+                }
+              },
+              focusNode: emailFocusNode,
               controller: emailController,
               labelText: "Email",
-              icon: const Icon(Icons.email),
+              icon: Icon(Icons.email,
+                  color: (emailFocusNode.hasPrimaryFocus)
+                      ? MyColors.primaryColor
+                      : MyColors.inkDarkGrey),
               keyType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 20),
             MyTextField(
+              onSubmitted: (value) {
+                if (value != "") {
+                  passwordFocusNode.unfocus();
+                }
+              },
+              focusNode: passwordFocusNode,
               controller: passwordController,
               labelText: "Password",
               icon: GestureDetector(
@@ -105,12 +131,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 24,
                         height: 24,
                         fit: BoxFit.scaleDown,
+                        color: (emailFocusNode.hasFocus)
+                            ? MyColors.primaryColor
+                            : MyColors.inkDarkGrey,
                       )
                     : SvgPicture.asset(
                         MyIcons.visible,
                         width: 24,
                         height: 24,
                         fit: BoxFit.scaleDown,
+                        color: (emailFocusNode.hasFocus)
+                            ? MyColors.primaryColor
+                            : MyColors.inkDarkGrey,
                       ),
               ),
               isObscure: isObscure,
@@ -122,8 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: GoogleFonts.rubik().copyWith(
                   fontWeight: FontWeight.w700, color: MyColors.inkDarkGrey),
             ),
-            const SizedBox(height: 5),
-            const SizedBox(height: 13),
+            const SizedBox(height: 18),
             GestureDetector(
               onTap: () async {
                 String password = passwordController.text;
@@ -132,18 +163,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 String savedEmail = StorageRepository.getString("email");
                 String savedPassword = StorageRepository.getString("password");
 
-                print("EMAIL:$savedEmail");
-                print("PASSWORD:$savedPassword");
+                debugPrint("EMAIL:$savedEmail");
+                debugPrint("PASSWORD:$savedPassword");
 
-                if (password == savedPassword && email == savedEmail) {
+                bool isRegistered = StorageRepository.getBool("isRegistered");
+                if (password == savedPassword &&
+                    email == savedEmail &&
+                    password.isNotEmpty &&
+                    email.isNotEmpty) {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (BuildContext context) {
                     return const MyHomePage();
                   }));
+                  UtilityFunctions.getMyToast(message: "You are successfully logged in");
                   await StorageRepository.putBool("isLogged", true);
                 } else {
-                  UtilityFunctions.getMyToast(
-                      message: "Your email or password is incorrect!");
+                  (isRegistered == false)
+                      ? UtilityFunctions.getMyToast(
+                          message: "You should register first!")
+                      : UtilityFunctions.getMyToast(
+                          message: "Your email or password is incorrect!");
                 }
               },
               child: Container(
@@ -194,12 +233,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    passwordController.dispose();
-    emailController.dispose();
-    super.dispose();
   }
 }

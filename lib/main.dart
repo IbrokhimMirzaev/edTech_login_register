@@ -1,7 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preference/screens/courses_screen.dart';
-import 'package:shared_preference/screens/splash_screen.dart';
+import 'package:shared_preference/screens/splash/splash_screen.dart';
 import 'package:shared_preference/utils/theme.dart';
 
 void main() async {
@@ -31,4 +30,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

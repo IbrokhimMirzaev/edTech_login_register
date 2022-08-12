@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preference/global_widgets/my_text_field.dart';
-import 'package:shared_preference/screens/login_screen.dart';
+import 'package:shared_preference/widgets/my_text_field.dart';
+import 'package:shared_preference/screens/login/login_screen.dart';
 import 'package:shared_preference/utils/utility_functions.dart';
-
-import '../local_data/storage.dart';
-import '../utils/colors.dart';
-import '../utils/icons.dart';
+import '../../local_data/storage.dart';
+import '../../utils/colors.dart';
+import '../../utils/focusChange.dart';
+import '../../utils/icons.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -23,6 +22,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
+  final FocusNode focusNode1 = FocusNode();
+  final FocusNode focusNode2 = FocusNode();
+  final FocusNode focusNode3 = FocusNode();
+  final FocusNode focusNode4 = FocusNode();
+
+  @override
+  void dispose() {
+    focusNode1.dispose();
+    focusNode2.dispose();
+    focusNode3.dispose();
+    focusNode4.dispose();
+    super.dispose();
+  }
+
   String pas1 = "", pas2 = "", name = "", email = "";
   String password = "", email2 = "";
 
@@ -31,8 +44,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarIconBrightness: Brightness.dark,
@@ -48,12 +61,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 color: MyColors.inkDark)),
         centerTitle: true,
       ),
-      body: Container(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(left: 25, right: 25, top: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(child: Image.asset(MyIcons.registerGirl)),
+            Image.asset(MyIcons.registerGirl, height: 210),
             const SizedBox(height: 16),
             Text(
               "Register",
@@ -70,6 +84,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 16),
             MyTextField(
+              onSubmitted: (value) {
+                if (value != "") {
+                  MyUtils.fieldFocusChange(context, focusNode1, focusNode2);
+                }
+              },
+              focusNode: focusNode1,
               controller: emailController,
               labelText: "Email",
               icon: const Icon(Icons.email),
@@ -77,6 +97,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 20),
             MyTextField(
+              onSubmitted: (value) {
+                if (value != "") {
+                  MyUtils.fieldFocusChange(context, focusNode2, focusNode3);
+                }
+              },
+              focusNode: focusNode2,
               controller: nameController,
               labelText: "Name",
               icon: const Icon(Icons.account_circle),
@@ -84,6 +110,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 20),
             MyTextField(
+              onSubmitted: (value) {
+                if (value != "") {
+                  MyUtils.fieldFocusChange(context, focusNode3, focusNode4);
+                }
+              },
+              focusNode: focusNode3,
               controller: pass1Controller,
               labelText: "Password",
               icon: const Icon(Icons.lock),
@@ -91,10 +123,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 20),
             MyTextField(
-                controller: pass2Controller,
-                labelText: "Confirmation password",
-                icon: const Icon(Icons.lock_person),
-                keyType: TextInputType.visiblePassword),
+              onSubmitted: (v) {
+                if (v != "") {
+                  focusNode4.unfocus();
+                }
+              },
+              focusNode: focusNode4,
+              controller: pass2Controller,
+              labelText: "Confirmation password",
+              icon: const Icon(Icons.lock_person),
+              keyType: TextInputType.visiblePassword,
+            ),
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
@@ -115,6 +154,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       UtilityFunctions.getMyToast(
                           message: "You are successfully registered");
+
+                      await StorageRepository.putBool("isRegistered", true);
 
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (BuildContext context) {
@@ -151,14 +192,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
             ),
-            // const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Already have an account?",
                   style: GoogleFonts.roboto().copyWith(
-                      color: MyColors.primaryColor, fontWeight: FontWeight.bold),
+                      color: MyColors.primaryColor,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 10),
                 TextButton(

@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preference/screens/profile_screen.dart';
-import 'package:shared_preference/screens/register_screen.dart';
-import 'package:shared_preference/screens/settings_screen.dart';
-
-import '../local_data/storage.dart';
-import '../utils/colors.dart';
-import '../utils/icons.dart';
-import 'courses_screen.dart';
+import 'package:shared_preference/screens/tabs/profile_screen.dart';
+import 'package:shared_preference/screens/tabs/settings_screen.dart';
+import '../../utils/colors.dart';
+import '../../utils/icons.dart';
+import 'courses/courses_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);

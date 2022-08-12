@@ -8,6 +8,8 @@ class MyTextField extends StatelessWidget {
     required this.icon,
     required this.keyType,
     required this.controller,
+    required this.focusNode,
+    required this.onSubmitted,
     this.isObscure,
   }) : super(key: key);
   final String labelText;
@@ -15,12 +17,16 @@ class MyTextField extends StatelessWidget {
   final bool? isObscure;
   final TextInputType keyType;
   final TextEditingController controller;
+  final ValueChanged onSubmitted;
+  final FocusNode focusNode;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onSubmitted: onSubmitted,
       style: GoogleFonts.roboto().copyWith(fontWeight: FontWeight.w600, fontSize: 13),
       obscureText: isObscure ?? false,
+      focusNode: focusNode,
       keyboardType: keyType,
       cursorColor: Colors.orange,
       controller: controller,

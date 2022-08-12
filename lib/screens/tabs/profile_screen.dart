@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preference/screens/register_screen.dart';
+import 'package:shared_preference/screens/login/register_screen.dart';
+import 'package:shared_preference/widgets/arrow_back.dart';
 
-import '../local_data/storage.dart';
-import '../utils/colors.dart';
-import '../utils/icons.dart';
+import '../../local_data/storage.dart';
+import '../../utils/colors.dart';
+import '../../utils/icons.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -41,20 +41,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.headline1!.color)),
         centerTitle: true,
-        leading: GestureDetector(
+        leading: ArrowBack(
           onTap: () {
             SystemNavigator.pop();
           },
-          child: Container(
-            width: 40,
-            height: 40,
-            margin: const EdgeInsets.only(left: 15),
-            child: SvgPicture.asset(
-              MyIcons.back,
-              color: Theme.of(context).iconTheme.color,
-              fit: BoxFit.scaleDown,
-            ),
-          ),
         ),
       ),
       body: Container(
@@ -127,6 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 StorageRepository.deleteString("email");
                 StorageRepository.deleteString("password");
                 StorageRepository.deleteBool("isLogged");
+                StorageRepository.deleteBool("isRegistered");
               },
               style: TextButton.styleFrom(
                 padding:
